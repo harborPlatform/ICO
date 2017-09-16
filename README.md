@@ -8,8 +8,6 @@ Technically, Harbor provides a library that allows software licenses to be secur
 Furthermore, We aim to build cross-platform support, easy software sales and a simple in-app payment system.
 As a retailing channel for software sales, we provide a Harbor store and support various applications using block chain technology.
 
-[![alt text][[http://i.imgur.com/tXSoThF.png]]][[https://twitter.com/HarborSupport]]
-[![alt text] http://i.imgur.com/P3YfQoD.png ] https://www.facebook.com/HarborToken
 
 ### ICO Contract deploy information
 
@@ -19,6 +17,8 @@ HarborCrowdsale: [0x84b42a80283a8936ffe95f1fe3762ba4538ce21a](https://etherscan.
 
 www.toharbor.com
 
+twitter:https://twitter.com/HarborSupport
+facebook:https://www.facebook.com/HarborToken
 
 ### Video
 
