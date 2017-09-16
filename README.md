@@ -21,13 +21,13 @@ www.toharbor.com
 
 ### Presentation
 
-![Harbor is application store](/img/harbor_ppt_01.jpg "Harbor is application store")
-![Alt text](/img/harbor_ppt_02.jpg "Support Anything, Distribute Anywhere")
-![Alt text](/img/harbor_ppt_03.jpg "Harbor structure")
-![Alt text](/img/harbor_ppt_04.jpg "Strategy for connecting Ethereum")
-![Alt text](/img/harbor_ppt_05.jpg "Why harbor?")
-![Alt text](/img/harbor_ppt_06.jpg "fuction")
-![Alt text](/img/harbor_ppt_07.jpg "Benefit")
-![Alt text](/img/harbor_ppt_08.jpg "Expansion")
-![Alt text](/img/harbor_ppt_09.jpg "end")
+![](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_01.jpg "Harbor is application store")
+![](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_02.jpg "Support Anything, Distribute Anywhere")
+![](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_03.jpg "Harbor structure")
+![](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_04.jpg "Strategy for connecting Ethereum")
+![](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_05.jpg "Why harbor?")
+![](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_06.jpg "fuction")
+![](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_07.jpg "Benefit")
+![](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_08.jpg "Expansion")
+![](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_09.jpg "end")
 
