@@ -13,6 +13,11 @@ As a retailing channel for software sales, we provide a Harbor store and support
 
 HarborCrowdsale: [0x84b42a80283a8936ffe95f1fe3762ba4538ce21a](https://etherscan.io/address/0x84b42a80283a8936ffe95f1fe3762ba4538ce21a)
 
+
+### Video
+
+[![Harbor introduction video](https://img.youtube.com/vi/qTYIwlzJfRs/0.jpg)](https://www.youtube.com/watch?v=qTYIwlzJfRs)
+
 ### Site
 
 www.toharbor.com
@@ -20,13 +25,7 @@ www.toharbor.com
 [![](http://i.imgur.com/tXSoThF.png "twitter")](https://twitter.com/HarborSupport)
 [![](http://i.imgur.com/P3YfQoD.png "facebook")](https://www.facebook.com/HarborToken)
 
-### Video
-
-[![Harbor introduction video](https://img.youtube.com/vi/qTYIwlzJfRs/0.jpg)](https://www.youtube.com/watch?v=qTYIwlzJfRs)
-
-
-
-### Presentation
+## Presentation
 
 
 ![](img/harbor_ppt_01.JPG "Harbor is application store")
