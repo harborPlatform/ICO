@@ -21,13 +21,22 @@ www.toharbor.com
 
 ### Presentation
 
+
 ![](img/harbor_ppt_01.JPG "Harbor is application store")
+
 ![](img/harbor_ppt_02.JPG "Support Anything, Distribute Anywhere")
+
 ![](img/harbor_ppt_03.JPG "Harbor structure")
+
 ![](img/harbor_ppt_04.JPG "Strategy for connecting Ethereum")
+
 ![](img/harbor_ppt_05.JPG "Why harbor?")
+
 ![](img/harbor_ppt_06.JPG "fuction")
+
 ![](img/harbor_ppt_07.JPG "Benefit")
+
 ![](img/harbor_ppt_08.JPG "Expansion")
+
 ![](img/harbor_ppt_09.JPG "end")
 
