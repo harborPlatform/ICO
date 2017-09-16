@@ -17,8 +17,8 @@ HarborCrowdsale: [0x84b42a80283a8936ffe95f1fe3762ba4538ce21a](https://etherscan.
 
 www.toharbor.com
 
-twitter:https://twitter.com/HarborSupport
-facebook:https://www.facebook.com/HarborToken
+twitter:[https://twitter.com/HarborSupport]
+facebook:[https://www.facebook.com/HarborToken]
 
 ### Video
 
