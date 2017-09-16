@@ -2,7 +2,7 @@
 
 
 
-### About Harbor
+## About Harbor
 
 Technically, Harbor provides a library that allows software licenses to be securely managed using a block-chain network and to facilitate in-app billing using cryptocurrency 
 Furthermore, We aim to build cross-platform support, easy software sales and a simple in-app payment system.
@@ -21,13 +21,13 @@ www.toharbor.com
 
 ### Presentation
 
-![Alt text](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_01.jpg "Harbor is application store")
-![Alt text](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_02.jpg "Support Anything, Distribute Anywhere")
-![Alt text](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_03.jpg "Harbor structure")
-![Alt text](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_04.jpg "Strategy for connecting Ethereum")
-![Alt text](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_05.jpg "Why harbor?")
-![Alt text](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_06.jpg "fuction")
-![Alt text](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_07.jpg "Benefit")
-![Alt text](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_08.jpg "Expansion")
-![Alt text](https://github.com/harborPlatform/ICO/blob/master/img/harbor_ppt_09.jpg "end")
+![](img/harbor_ppt_01.JPG "Harbor is application store")
+![](img/harbor_ppt_02.JPG "Support Anything, Distribute Anywhere")
+![](img/harbor_ppt_03.JPG "Harbor structure")
+![](img/harbor_ppt_04.JPG "Strategy for connecting Ethereum")
+![](img/harbor_ppt_05.JPG "Why harbor?")
+![](img/harbor_ppt_06.JPG "fuction")
+![](img/harbor_ppt_07.JPG "Benefit")
+![](img/harbor_ppt_08.JPG "Expansion")
+![](img/harbor_ppt_09.JPG "end")
 
