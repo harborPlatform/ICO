@@ -1,6 +1,6 @@
 # Harbor ICO
 
-
+smart contract, Whitepaper, Harbor ICO information
 
 ## About Harbor
 
