@@ -1,6 +1,6 @@
-# Harbor ICO
+# Harbor crowdsale
 
-smart contract, Whitepaper, Harbor ICO information
+smart contract, Whitepaper, Harbor crowdsale information
 
 ## About Harbor
 
@@ -8,10 +8,26 @@ Technically, Harbor provides a library that allows software licenses to be secur
 Furthermore, we aim to build cross-platform support, easy software sales and a simple in-app payment system.
 As a retailing channel for software sales, we provide a Harbor Store and support various applications using block-chain technology.
 
+## About Harbor token
+
+Harbor Token is a token with the right to purchase the software and the goods and services that are distributed in the harbor platform. It is a cryptocurrency based on ERC20 of Ethereum network, the management issued a token of how currency held some underlying asset and reserves, and the issuing body that controls the money supply of the goods to be exchanged during the token Harbor.
+
+## Harbor crowdsale contract
+
+### HBRAsetsETH
+Manage your assets Harbor token. Managing assets can be exchanged in proportion to the number of tokens issued Harbor. 
+
+### HBRFrozenAssets
+
+### HBRExchangeETH
+
+### HBRIdentification
+
+
 
 ### ICO Contract deploy information
 
-HarborCrowdsale: [0x84b42a80283a8936ffe95f1fe3762ba4538ce21a](https://etherscan.io/address/0x84b42a80283a8936ffe95f1fe3762ba4538ce21a)
+<!-- HarborCrowdsale: [0x84b42a80283a8936ffe95f1fe3762ba4538ce21a](https://etherscan.io/address/0x84b42a80283a8936ffe95f1fe3762ba4538ce21a) -->
 
 
 ### Video
