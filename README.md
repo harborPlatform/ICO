@@ -8,9 +8,7 @@ Harbor Token is a token with the right to purchase the software and the goods an
 
 ## Harbor crowdsale major Benefits
 
-![](img/token_concept1.png "Harbor Token issue concept")
-
-- Basic Asset Value
+- Basic Asset Value (fundamental assets or reserves)
 - Interchangeable tokens by asset contract (Price Guarantee and Growth Momentum)
 - Configuration of diverse dsset portfolio
 - Managed currency system
@@ -20,6 +18,8 @@ Harbor Token is a token with the right to purchase the software and the goods an
 
 Harbor crowdsale scenario examples (*This is just an example, not a plan.*)
 [link](https://docs.google.com/spreadsheets/d/1HoIUNR-K55de0KaysTnZiMjszJtl_qU0C0AXG58jlQc/edit?usp=sharing)
+
+![](img/token_concept1.png "Harbor Token issue concept")
 
 ## Harbor crowdsale contract
 
@@ -48,6 +48,12 @@ To purchase more than a certain amount of HBR tokens, it must be authorized by t
 <!-- HarborCrowdsale: [0x84b42a80283a8936ffe95f1fe3762ba4538ce21a](https://etherscan.io/address/0x84b42a80283a8936ffe95f1fe3762ba4538ce21a) -->
 
 
+## About HarborPlatform
+
+Technically, Harbor provides a library that allows software licenses to be securely managed using a block-chain network and to facilitate in-app billing using cryptocurrency.
+Furthermore, we aim to build cross-platform support, easy software sales and a simple in-app payment system.
+As a retailing channel for software sales, we provide a Harbor Store and support various applications using block-chain technology.
+
 ### Video
 
 [![Harbor introduction video](https://img.youtube.com/vi/qTYIwlzJfRs/0.jpg)](https://www.youtube.com/watch?v=qTYIwlzJfRs)
@@ -58,13 +64,6 @@ To purchase more than a certain amount of HBR tokens, it must be authorized by t
 
 [![](http://i.imgur.com/tXSoThF.png "twitter")](https://twitter.com/HarborSupport)
 [![](http://i.imgur.com/P3YfQoD.png "facebook")](https://www.facebook.com/HarborToken)
-
-
-## About HarborPlatform
-
-Technically, Harbor provides a library that allows software licenses to be securely managed using a block-chain network and to facilitate in-app billing using cryptocurrency.
-Furthermore, we aim to build cross-platform support, easy software sales and a simple in-app payment system.
-As a retailing channel for software sales, we provide a Harbor Store and support various applications using block-chain technology.
 
 
 ## Harbor Platform Presentation
