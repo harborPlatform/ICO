@@ -16,10 +16,12 @@ Harbor Token is a token with the right to purchase the software and the goods an
 - Stable value growth by securing assets continuously
 - New trials and experiments on cryptocurrency economics
 
-Harbor crowdsale scenario examples (*This is just an example, not a plan.*)
-[link](https://docs.google.com/spreadsheets/d/1HoIUNR-K55de0KaysTnZiMjszJtl_qU0C0AXG58jlQc/edit?usp=sharing)
 
 ![](img/token_concept1.png "Harbor Token issue concept")
+
+>Harbor crowdsale scenario examples (*This is just an example, not a plan.*)
+>[link](https://docs.google.com/spreadsheets/d/1HoIUNR-K55de0KaysTnZiMjszJtl_qU0C0AXG58jlQc/edit?usp=sharing)
+
 
 ## Harbor crowdsale contract
 
