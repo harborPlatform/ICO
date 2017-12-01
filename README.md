@@ -6,7 +6,7 @@ smart contract, Whitepaper, Harbor crowdsale information
 
 Harbor Token is a token with the right to purchase the software and the goods and services that are distributed in the harbor platform. It is a cryptocurrency based on ERC20 of Ethereum network, the management issued a token of how currency held some underlying asset and reserves, and the issuing body that controls the money supply of the goods to be exchanged during the token Harbor.
 
-## Harbor crowdsale major Benefits
+##Major advantages of harbor crowdsale
 
 - Basic Asset Value (fundamental assets or reserves)
 - Interchangeable tokens by asset contract (Price Guarantee and Growth Momentum)
