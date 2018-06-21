@@ -5,6 +5,12 @@ import './Authorized.sol';
 /**
  * @title IntegrityService
  * @dev The identification contract confirms the identity of the investor for the purpose of kyc / aml.
+ *
+ * authority level
+ * step 1 approve system
+ * step 2 approve 3rd party
+ * step 3 approve self 
+ * step 4 approve self and system (3rd party)
  */
  
 contract HBRIdentification is Authorized {

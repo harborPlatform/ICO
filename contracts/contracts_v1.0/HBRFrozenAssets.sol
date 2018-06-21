@@ -9,7 +9,7 @@ import './HarborToken.sol';
  * @dev This is a contract to temporarily adjust the HBR volume and asset exchange rate.
  * it can only access by assets contract
  * Pegging assets or Release pegged assets (It is temporary, and so the effect is not much.)
- * Defend bankrun due to sudden rise in asset prices.
+ * Defence bankrun due to sudden rise in asset prices.
  */
 contract HBRFrozenAssets is Ownable {
   using SafeMath for uint256;
@@ -24,12 +24,14 @@ contract HBRFrozenAssets is Ownable {
 
   uint public frozenTotal;
 
+  //Temporarily,increase the total supply.
   function freeze(uint256 _amount) returns (bool){
+    token.mint(address(this),_amount);
   	frozenTotal = frozenTotal.add(_amount);
   	Frozen(_amount);
     return true;
   }
-
+  //Temporarily, decrease the total supply.
   function melt(uint256 _amount) returns (bool){
     require(frozenTotal >= _amount);
 

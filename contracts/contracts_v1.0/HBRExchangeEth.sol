@@ -151,10 +151,17 @@ contract HBRExchangeEth is Ownable{
     // calculate token amount to be created
     uint256 totalMinted = weiAmount.mul(price);
 
-    //founder skake (10%) & project funds stake (20%) (investor token's  30%)
-    uint256 projectfunds = totalMinted.div(5);
-    uint256 founderSkake = totalMinted.div(10);
-    uint256 userToken = totalMinted.sub(projectfunds).sub(founderSkake);
+    uint256 userToken = totalMinted.mul(0.7);
+    uint256 bonus = userToken.mul(0.05);
+    userToken = userToken.add(bonus);
+
+    uint256 projectfunds = (totalMinted.sub(userToken)).mul(0.66);
+    uint256 founderStake = (totalMinted.sub(userToken)).sub(projectfunds);
+
+    //founder skake (10%) & project funds stake (20%) = (investor token's  30%)
+    // uint256 projectfunds = totalMinted.div(5);
+    // uint256 founderSkake = totalMinted.div(10);
+    // uint256 userToken = totalMinted.sub(projectfunds).sub(founderSkake);
 
     //update Eth Total
     weiRaised = weiRaised.add(weiAmount);
