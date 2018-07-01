@@ -50,9 +50,7 @@ contract HBRExchangeEth is Ownable{
   // mapping (address => uint256) public projectBuget;
   mapping (address => uint256) public investedETH;
 
-  //event for tokenExchange end
-  event Finalized();
-
+  
   /**
    * event for token purchase logging
    * @param purchaser who paid for the tokens
@@ -61,12 +59,9 @@ contract HBRExchangeEth is Ownable{
    * @param amount amount of tokens purchased
    */ 
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount,uint256 projectamount);
-
-  // tokenExchange end time has been changed
   event EndsAtChanged(uint newEndsAt);
-
-  emit WithdrowErc20Token(_tokenAddr, _to, _value);
-
+  event WithdrowErc20Token (address indexed erc20, address indexed wallet, uint value);
+  event Finalized();
 
   constructor(
     uint256 _price,uint256 _startTime, uint256 _endTime,
@@ -139,6 +134,7 @@ contract HBRExchangeEth is Ownable{
   // low level token purchase function
   function buyTokens(address beneficiary) public payable stopInEmergency {
     require(beneficiary != 0x0);
+    require(msg.value >= 0);
     require(validPurchase());
 
     investedETH[beneficiary] = investedETH[beneficiary].add(msg.value);
@@ -192,13 +188,13 @@ contract HBRExchangeEth is Ownable{
   // @return true if the transaction can buy tokens
   function validPurchase() internal constant returns (bool) {
     bool withinPeriod = now >= startTime && now <= endTime;
-    bool nonZeroPurchase = msg.value != 0;
     bool minimumReached = minFundingGoalReached();
 
-    if(minimumReached == false){
-      return nonZeroPurchase && now >= startTime;
+    if(now < startTime){
+      return false;
     }
-    return withinPeriod && nonZeroPurchase;
+
+    return withinPeriod && minimumReached;
   }
 
   function minFundingGoalReached() public constant returns (bool) {
@@ -206,9 +202,6 @@ contract HBRExchangeEth is Ownable{
   }
 
   function withdrowErc20(address _tokenAddr, address _to, uint _value) public onlyOwner {
-    //to audit token address
-    require (token.address != _tokenAddr)
-
     ERC20 erc20 = ERC20(_tokenAddr);
     erc20.transfer(_to, _value);
     emit WithdrowErc20Token(_tokenAddr, _to, _value);

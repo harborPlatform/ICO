@@ -211,10 +211,7 @@ contract HBRAssetsEth is Authorized, PolicyManager {
   }
 
 
-  function withdrowErc20(address _tokenAddr, address _to, uint _value) public onlyOwner {
-    //to audit token address
-    require (token.address != _tokenAddr)
-
+  function withdrowErc20(address _tokenAddr, address _to, uint _value) public onlyAuthorized {
     ERC20 erc20 = ERC20(_tokenAddr);
     erc20.transfer(_to, _value);
     emit WithdrowErc20Token(_tokenAddr, _to, _value);
