@@ -57,19 +57,19 @@ To purchase more than a certain amount of HBR tokens, it must be authorized by t
 <!-- HarborCrowdsale: [0x84b42a80283a8936ffe95f1fe3762ba4538ce21a](https://etherscan.io/address/0x84b42a80283a8936ffe95f1fe3762ba4538ce21a) -->
 
 
-History of underlying asset currency and UAICO
+### History of underlying asset currency and UAICO
 https://medium.com/@junghan.kim/new-ico-model-for-business-uaico-underlying-asset-initial-coin-offering-435c59c2c1d2
 
-A New ICO model for Businesses — UAICO (Underlying Asset ICO)
+### A New ICO model for Businesses — UAICO (Underlying Asset ICO)
 https://medium.com/@junghan.kim/a-new-ico-model-for-businesses-uaico-underlying-asset-ico-25e9a4c478ee
 
-The Value of a Cryptocurrency and Additional Issuance
+### The Value of a Cryptocurrency and Additional Issuance
 https://medium.com/@junghan.kim/the-value-of-a-cryptocurrency-and-additional-issuance-bbc1d4350c1e
 
-Underlying Asset as a Momentum for Stability and Steady Increase in Price
+### Underlying Asset as a Momentum for Stability and Steady Increase in Price
 https://medium.com/@junghan.kim/underlying-asset-as-a-momentum-for-stability-and-steady-increase-in-price-b3f52b05ac40
 
-A new consensus protocol in creating a decentralized and democratic market–Underlying Asset ICO Veto System
+### A new consensus protocol in creating a decentralized and democratic market–Underlying Asset ICO Veto System
 https://medium.com/@junghan.kim/a-new-consensus-protocol-in-creating-a-decentralized-and-democratic-market-underlying-asset-ico-cfc67a424db4
 
 
@@ -80,10 +80,10 @@ Furthermore, we aim to build cross-platform support, easy software sales and a s
 As a retailing channel for software sales, we provide a Harbor Store and support various applications using block-chain technology.
 
 
-brief description
+### brief description
 https://medium.com/@junghan.kim/harbor-brief-description-e1ab7c0018a3
 
-Our Prototype
+### Prototype
 https://medium.com/@junghan.kim/harbor-platform-prototype-296ea429d513
 
 ### Video
