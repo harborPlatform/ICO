@@ -1,6 +1,7 @@
-pragma solidity ^0.4.6;
+//pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
-import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
+import './Ownable.sol';
 /*
  * Haltable
  * emergency stop mechanism. Differs from Pausable by causing a throw when in halt mode.

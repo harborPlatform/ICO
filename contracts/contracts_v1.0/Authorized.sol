@@ -1,8 +1,11 @@
-pragma solidity ^0.4.11;
+//pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
 /**
  * @title Authorized
  * @dev The Authorized contract has an Authorized address, and provides basic authorization control
+ *  it can be multiple authority.
+
  */
 
 
@@ -14,7 +17,7 @@ contract Authorized {
 /**
  * @dev Authorized constructors grant default authorizations to contract authors.
  */
-  function Authorized() {
+  constructor() public{
     AuthorizedUser[msg.sender] = true;
   }
 
@@ -28,7 +31,7 @@ contract Authorized {
    */
   function setAuthorizedUser(address addr, bool state) onlyAuthorized public {
     AuthorizedUser[addr] = state;
-    AuthorizedUserChanged(addr, state);
+    emit AuthorizedUserChanged(addr, state);
   }
 
 }

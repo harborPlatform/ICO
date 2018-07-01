@@ -1,4 +1,5 @@
-pragma solidity ^0.4.11;
+//pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
 
 /**
@@ -17,7 +18,7 @@ contract Congress {
    * @dev The Ownable constructor sets the original `congress` of the contract to the sender
    * account.
    */
-  function Congress() {
+  constructor() public {
     congress = msg.sender;
   }
 
@@ -35,9 +36,9 @@ contract Congress {
    * @dev Allows the current congress to transfer control of the contract to a newCongress.
    * @param newCongress The address to transfer congress to.
    */
-  function transferCongress(address newCongress) onlyCongress {
+  function transferCongress(address newCongress) public onlyDiscussable {
     require(newCongress != address(0));      
-    CongressTransferred(congress, newCongress);
+    emit CongressTransferred(congress, newCongress);
     congress = newCongress;
   }
 

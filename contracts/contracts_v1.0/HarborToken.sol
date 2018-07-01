@@ -1,9 +1,10 @@
-pragma solidity ^0.4.11;
+//pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
 
-import '../node_modules/zeppelin-solidity/contracts/token/StandardToken.sol';
-import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
-
+import '../node_modules/openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
+import './Ownable.sol';
+import './Congress.sol';
 /**
  * @title Harbor token
  * @dev Simple ERC20 Token example, with mintable token creation
@@ -11,7 +12,7 @@ import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
  * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/MintableToken.sol
  */
 
-contract HarborToken is StandardToken, Ownable {
+contract HarborToken is StandardToken, Ownable, Congress {
 
   //define HarborToken
   string public constant name = "HarborToken";
@@ -35,21 +36,21 @@ contract HarborToken is StandardToken, Ownable {
   }
 
   modifier onlyMintAgent() {
-    // Only crowdsale contracts are allowed to mint new tokens
+    // Only specific addresses contracts are allowed to mint new tokens
     require(mintAgents[msg.sender]);
     _;
   }
 
-  function HarborToken(){
+  constructor() public {
     setMintAgent(msg.sender,true);
   }
 
   /**
-   * Owner can allow a crowdsale contract to mint new tokens.
+   * Congress can regulate new token issuance by contract.
    */
-  function setMintAgent(address addr, bool state) onlyOwner public {
+  function setMintAgent(address addr, bool state) public onlyDiscussable {
     mintAgents[addr] = state;
-    MintingAgentChanged(addr, state);
+    emit MintingAgentChanged(addr, state);
   }
 
   /**
@@ -58,11 +59,11 @@ contract HarborToken is StandardToken, Ownable {
    * @param _amount The amount of tokens to mint.
    * @return A boolean that indicates if the operation was successful.
    */
-  function mint(address _to, uint256 _amount) onlyMintAgent canMint returns (bool) {
-    totalSupply = totalSupply.add(_amount);
+  function mint(address _to, uint256 _amount) public onlyMintAgent canMint returns (bool) {
+    totalSupply_ = totalSupply_.add(_amount);
     balances[_to] = balances[_to].add(_amount);
-    Mint(_to, _amount);
-    Transfer(0x0, _to, _amount);
+    emit Mint(_to, _amount);
+    emit Transfer(0x0, _to, _amount);
     return true;
   }
 
@@ -72,22 +73,24 @@ contract HarborToken is StandardToken, Ownable {
    * @param  _amount The amount of tokens to burn.
    * @return A boolean that indicates if the burn up was successful.
    */
-  function burn(address _addr,uint256 _amount) onlyMintAgent canMint  returns (bool) {
+  function burn(address _addr,uint256 _amount) public onlyMintAgent canMint returns (bool) {
     require(_amount > 0);
     require(balances[_addr] >= _amount);
-    totalSupply = totalSupply.sub(_amount);
+    totalSupply_ = totalSupply_.sub(_amount);
     balances[_addr] = balances[_addr].sub(_amount);
-    BurnToken(_addr,_amount);
+    emit BurnToken(_addr,_amount);
     return true;
   }
+
+
 
   /**
    * @dev Function to resume minting new tokens.
    * @return True if the operation was successful.
    */
-  function openMinting() onlyOwner returns (bool) {
+  function openMinting() public onlyOwner returns (bool) {
     mintingFinished = false;
-    MintOpened();
+    emit MintOpened();
      return true;
   }
 
@@ -95,9 +98,9 @@ contract HarborToken is StandardToken, Ownable {
    * @dev Function to stop minting new tokens.
    * @return True if the operation was successful.
    */
-  function finishMinting() onlyOwner returns (bool) {
+  function finishMinting() public onlyOwner returns (bool) {
     mintingFinished = true;
-    MintFinished();
+    emit MintFinished();
     return true;
   }
 

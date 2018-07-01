@@ -1,4 +1,5 @@
-pragma solidity ^0.4.11;
+//pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
 import './Authorized.sol';
 
@@ -20,13 +21,13 @@ contract HBRIdentification is Authorized {
   event proven(address addr,bool isConfirm);
 
   //Identification check for KYC/AML
-  function verify(address _addr) public returns(bool) {
+  function verify(address _addr) public view returns(bool) {
    return IdentificationDb[_addr];
   }
 
   //Register members whose identity information has been verified on the website by batch system, for KYC/AML
-  function provenAddress(address _addr, bool _isConfirm) onlyAuthorized {
+  function provenAddress(address _addr, bool _isConfirm) public onlyAuthorized {
     IdentificationDb[_addr] = _isConfirm;
-    proven(_addr,_isConfirm);
+    emit proven(_addr,_isConfirm);
   }
 }

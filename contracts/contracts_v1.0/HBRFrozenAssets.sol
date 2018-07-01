@@ -1,7 +1,8 @@
-pragma solidity ^0.4.11;
+//pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
-import '../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol';
-import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
+import '../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol';
+import './Ownable.sol';
 import './HarborToken.sol';
 
 /**
@@ -18,26 +19,26 @@ contract HBRFrozenAssets is Ownable {
   event Frozen(uint256 amount);
   event Melted(uint256 amount);
 
-  function HBRFrozenAssets(address _tokenAddr){
+  constructor(address _tokenAddr) public {
   	token = HarborToken(_tokenAddr);
   }
 
   uint public frozenTotal;
 
   //Temporarily,increase the total supply.
-  function freeze(uint256 _amount) returns (bool){
+  function freeze(uint256 _amount) external onlyOwner returns (bool){
     token.mint(address(this),_amount);
   	frozenTotal = frozenTotal.add(_amount);
-  	Frozen(_amount);
+  	emit Frozen(_amount);
     return true;
   }
   //Temporarily, decrease the total supply.
-  function melt(uint256 _amount) returns (bool){
+  function melt(uint256 _amount) external onlyOwner returns (bool){
     require(frozenTotal >= _amount);
 
     token.burn(address(this),_amount);
     frozenTotal = frozenTotal.sub(_amount);
-    Melted(_amount);
+     emit Melted(_amount);
     return true;
    }
 

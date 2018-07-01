@@ -1,16 +1,17 @@
-pragma solidity ^0.4.11;
+// pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
-import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
-import '../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol';
+import './Ownable.sol';
+import '../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol';
 import './HBRAssetsEth.sol';
 import './HarborToken.sol';
-import './HBRIdentification.sol';
+// import './HBRIdentification.sol';
 
 /**
  * @title HBRExchangeEth 
- * @dev HBRExchangeEth is a base contract for managing a token crowdsale.
+ * @dev HBRExchangeEth is a base contract for managing a token tokenExchange.
  * HBRExchangeEth have a start and end timestamps, where investors can make
- * token purchases and the crowdsale will assign them tokens based
+ * token purchases and the tokenExchange will assign them tokens based
  * on a token per ETH rate buyprice(). Funds collected are forwarded to a wallet 
  * as they arrive.
  */
@@ -33,7 +34,7 @@ contract HBRExchangeEth is Ownable{
   uint256 public weiRaised;
   
   bool public halted;
-  //is crowdsale end
+  //is tokenExchange end
   bool public isFinalized = false;
 
   // minimum amount of funds to be raised in weis
@@ -42,10 +43,6 @@ contract HBRExchangeEth is Ownable{
 
   uint256 public price = 25000;
 
-  uint256 public limitKycAml;
-
-  HBRIdentification kycAmlChecker;
-
   // asset Contract used to hold funds for exchange reserves
   HBRAssetsEth public assets;
 
@@ -53,7 +50,7 @@ contract HBRExchangeEth is Ownable{
   // mapping (address => uint256) public projectBuget;
   mapping (address => uint256) public investedETH;
 
-  //event for crowdsale end
+  //event for tokenExchange end
   event Finalized();
 
   /**
@@ -65,18 +62,25 @@ contract HBRExchangeEth is Ownable{
    */ 
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount,uint256 projectamount);
 
-    // Crowdsale end time has been changed
+  // tokenExchange end time has been changed
   event EndsAtChanged(uint newEndsAt);
 
-  function HBRExchangeEth(uint256 _price,uint256 _startTime, uint256 _endTime,
-    address _token ,address _assets,  address _kycAml, address _projectWallet,address _founderWallet,
-    uint256 _minimumFundingGoal, uint256 _limitKycAml) {
+  emit WithdrowErc20Token(_tokenAddr, _to, _value);
+
+
+  constructor(
+    uint256 _price,uint256 _startTime, uint256 _endTime,
+    address _token, address _assets, 
+    address _projectWallet, address _founderWallet,
+    uint256 _minimumFundingGoal
+    ) public {
+
     require(_startTime >= now);
     require(_endTime >= _startTime);
     require(_projectWallet != 0x0);
     require(_founderWallet != 0x0);
     require(_minimumFundingGoal > 0);
-    require(_limitKycAml > 0);
+    
 
     price = _price;
     startTime = _startTime;
@@ -85,17 +89,18 @@ contract HBRExchangeEth is Ownable{
     founderWallet = _founderWallet;
     token = HarborToken(_token);
     assets = HBRAssetsEth(_assets);
-    kycAmlChecker = HBRIdentification(_kycAml);
     minimumFundingGoal = _minimumFundingGoal;
-    limitKycAml = _limitKycAml;
+    
 
     //grant token control to HBRExchangeEth
-    // token.setMintAgent(address(this), true);
+    //token.setMintAgent(address(this), true);
   }
 
-  function reset(uint256 _price,uint256 _startTime, uint256 _endTime,
-    address _projectWallet,address _founderWallet,
-    uint256 _minimumFundingGoal) onlyOwner {
+  function reset(
+    uint256 _price, uint256 _startTime, uint256 _endTime,
+    address _projectWallet, address _founderWallet,
+    uint256 _minimumFundingGoal
+    ) public onlyOwner {
     require(_startTime >= now);
     require(_endTime >= _startTime);
     require(_projectWallet != 0x0);
@@ -127,21 +132,14 @@ contract HBRExchangeEth is Ownable{
   }
 
   // fallback function can be used to buy tokens
-  function () payable{
+  function () external payable {
     buyTokens(msg.sender);
   }
 
   // low level token purchase function
-  function buyTokens(address beneficiary) payable stopInEmergency {
+  function buyTokens(address beneficiary) public payable stopInEmergency {
     require(beneficiary != 0x0);
     require(validPurchase());
-
-     // If the amount is over limitKycAml, check for user verification for KYC & AML.
-    if(limitKycAml < investedETH[beneficiary].add(msg.value)){
-      if(kycAmlChecker.verify(beneficiary) == false){
-        revert();
-      }
-    }
 
     investedETH[beneficiary] = investedETH[beneficiary].add(msg.value);
 
@@ -151,44 +149,36 @@ contract HBRExchangeEth is Ownable{
     // calculate token amount to be created
     uint256 totalMinted = weiAmount.mul(price);
 
-    uint256 userToken = totalMinted.mul(0.7);
-    uint256 bonus = userToken.mul(0.05);
+    uint256 userToken = totalMinted.mul(7).div(100);
+    uint256 bonus = userToken.mul(5).div(100);
     userToken = userToken.add(bonus);
 
-    uint256 projectfunds = (totalMinted.sub(userToken)).mul(0.66);
+    uint256 projectfunds = (totalMinted.sub(userToken)).mul(6).div(100);
     uint256 founderStake = (totalMinted.sub(userToken)).sub(projectfunds);
 
     //founder skake (10%) & project funds stake (20%) = (investor token's  30%)
     // uint256 projectfunds = totalMinted.div(5);
-    // uint256 founderSkake = totalMinted.div(10);
-    // uint256 userToken = totalMinted.sub(projectfunds).sub(founderSkake);
+    // uint256 founderStake = totalMinted.div(10);
+    // uint256 userToken = totalMinted.sub(projectfunds).sub(founderStake);
 
     //update Eth Total
     weiRaised = weiRaised.add(weiAmount);
 
     token.mint(beneficiary, userToken);
     token.mint(projectWallet,projectfunds);
-    token.mint(founderWallet,founderSkake);
+    token.mint(founderWallet,founderStake);
 
-    TokenPurchase(msg.sender, beneficiary, weiAmount, totalMinted, projectfunds);
+    emit TokenPurchase(msg.sender, beneficiary, weiAmount, totalMinted, projectfunds);
     forwardFunds(totalMinted);
   }
 
-  function validation() public returns(bytes32){
+  function validation() public view returns(bool){
     bool withinPeriod = now >= startTime && now <= endTime;
      if(withinPeriod == false){
-      return 'withinPeriod fail';
+      return false;
      }
-
-     address beneficiary = msg.sender;
-     if(limitKycAml < investedETH[beneficiary].add(msg.value)){
-      if(kycAmlChecker.verify(beneficiary) == false){
-        return 'fail kyc';
-      }
-    }
-    return 'ok';
+    return true;
   }
-
 
   // send ether to the fund collection wallet
   // override to create custom fund forwarding mechanisms
@@ -213,6 +203,15 @@ contract HBRExchangeEth is Ownable{
 
   function minFundingGoalReached() public constant returns (bool) {
     return weiRaised >= minimumFundingGoal;
+  }
+
+  function withdrowErc20(address _tokenAddr, address _to, uint _value) public onlyOwner {
+    //to audit token address
+    require (token.address != _tokenAddr)
+
+    ERC20 erc20 = ERC20(_tokenAddr);
+    erc20.transfer(_to, _value);
+    emit WithdrowErc20Token(_tokenAddr, _to, _value);
   }
 
 }

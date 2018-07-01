@@ -1,6 +1,7 @@
-pragma solidity ^0.4.11;
+//pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
-import '../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol';
+import '../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol';
 import './Authorized.sol';
 import './PolicyManager.sol';
 import './HarborToken.sol';
@@ -12,7 +13,7 @@ import './HBRFrozenAssets.sol';
  * Supports Withdrawal the money if anytimes  
  *  However, it differs from the rate that was exchanged at the time of payment.
  */
-contract HBRAssetsEth is Authorized {
+contract HBRAssetsEth is Authorized, PolicyManager {
   using SafeMath for uint256;
 
   enum State { StopAll, ActiveAll, OnlyDeposit ,OnlyWithdrawl }
@@ -42,15 +43,17 @@ contract HBRAssetsEth is Authorized {
   uint public ethTotal;
   //HBR issuance corresponding to deposited ETH 
   uint public hbrTotal;
-
+  //Make ether the underlying asset of all assets.
   bool public equalizeLevel;
 
   event StateChanged();
   event Deposit(address indexed addr,uint256 eth_amount,uint256 hbr_amount);
   event Withdrawn(address indexed addr, uint256 weiAmount);
-  event Burn(address indexed addr, uint256 amount, bytes32 info);
+  event Burn(address indexed addr, uint256 amount);
+  event WithdrowErc20Token (address indexed erc20, address indexed wallet, uint value);
 
-  function HBRAssetsEth(address _tokenAddr) {
+
+  constructor(address _tokenAddr) public {
     state = State.ActiveAll;
     token = HarborToken(_tokenAddr);
     frozonAssets = new HBRFrozenAssets(_tokenAddr);
@@ -64,17 +67,16 @@ contract HBRAssetsEth is Authorized {
 
   // 1eth : 2000hbr = ethTotal: hbrTotal; 3:6000 = x : 300 , x = 900/6000
   // ethTotal: hbrTotal = x : hbrRefund;
-  function assetRate() public returns(uint){
+  function assetRate() public view returns(uint256) {
     if(hbrTotal == 0 || ethTotal == 0){return 0;}
 
     if(equalizeLevel){
-        return token.totalSupply.div(ethTotal);
+      uint256 totalsupply = token.totalSupply();
+        return totalsupply.div(ethTotal);
       }else{
          return hbrTotal.div(ethTotal);
       }
   }
-
-
 
   //deposit  
   function deposit(address _addr,uint256 _hbr_amount) public onlyAuthorized payable returns(bool) {
@@ -88,13 +90,13 @@ contract HBRAssetsEth is Authorized {
     return true;
   }
 
-  function changeState(State _state) onlyAuthorized {
+  function changeState(State _state) public onlyAuthorized {
     state = _state;
-    StateChanged();
+    emit StateChanged();
   }
 
    function changeEqulizePolicy(bool _equalizeLevel) public onlyPolicyManager returns(bool) {
-    equalizeLevel = _equalizeLevel
+    equalizeLevel = _equalizeLevel;
     return equalizeLevel;
   }
 
@@ -126,26 +128,52 @@ contract HBRAssetsEth is Authorized {
   }
 
 //Reservation HBR to ETH, 
-  function reservationWithdrawal(uint256 _amount) payable {
+  function reservationWithdrawal(uint256 _amount) payable public {
     require((state == State.ActiveAll || state == State.OnlyWithdrawl));
-    require(token.balanceOf(msg.sender) >= _amount);
-
-    if(reservation[msg.sender]){
-      reservation[msg.sender].regDate = now;
-      reservation[msg.sender].amount = _amount;
-    }else{
-      reservation[msg.sender] = Receipt({ regDate : now, amount: _amount});
+    
+    if(!equalizeLevel){
+      if(token.balanceOf(msg.sender) >= _amount){
+        revert();
+      }
     }
+
+    reservation[msg.sender].regDate = now;
+    reservation[msg.sender].amount = _amount;
+
+    // if(reservation[msg.sender]){
+    //   reservation[msg.sender].regDate = now;
+    //   reservation[msg.sender].amount = _amount;
+    // }else{
+    //   reservation[msg.sender] = Receipt({ regDate : now, amount: _amount});
+    // }
      
+  }
+
+  //Check withdrawal possible
+  function checkWithdrawal(uint256 _amount) public view returns(bool) {
+    if(state == State.ActiveAll || state == State.OnlyWithdrawl){
+      return false;
+    }
+    if(token.balanceOf(msg.sender) >= _amount){
+      return false;
+    }
+    if(reservation[msg.sender].amount >= _amount){
+      return false;
+    }
+    uint startTime = reservation[msg.sender].regDate + (minuteWating * 1 minutes);
+    uint endTime = startTime + (noShowLimit * 1 minutes);
+     if(startTime <= now || endTime <= now) {
+      return false;
+    }
+    return true;
   }
 
 
   //exchange HBR to ETH and burn HBR
-  function withdrawal(uint256 _amount) payable {
+  function withdrawal(uint256 _amount) payable public {
     require((state == State.ActiveAll || state == State.OnlyWithdrawl));
     require(token.balanceOf(msg.sender) >= _amount);
-    require(reservation[msg.sender].amount >= _amount)
-
+    require(reservation[msg.sender].amount >= _amount);
 
     uint startTime = reservation[msg.sender].regDate + (minuteWating * 1 minutes);
     uint endTime = startTime + (noShowLimit * 1 minutes);
@@ -154,28 +182,42 @@ contract HBRAssetsEth is Authorized {
       revert('its not reserved time');
     }
 
-    address _wallet = msg.sender;
+    address wallet = msg.sender;
     
     uint256 rate = assetRate();
     uint256 eth = _amount.div(rate);
 
-    bool hasBurn = token.burn(_wallet,_amount);
+    bool hasBurn = token.burn(wallet,_amount);
+    emit Burn(wallet, _amount);
+
     if(hasBurn == false){
       revert();
     }
     
-    _wallet.transfer(eth);
+    wallet.transfer(eth);
     ethTotal = ethTotal.sub(eth);
     hbrTotal = hbrTotal.sub(_amount);
 
-    Withdrawn(_wallet, eth);
+    emit Withdrawn(wallet, eth);
   }
 
   //burn HBR everyone accessable
-  function burnHBR(address _acc,uint256 _amount,bytes32 _info) {
-    token.burn(_acc,_amount);
+  function burnHBR(uint256 _amount) public{
+    require(_amount > 0);
+    address burner = msg.sender;
+    token.burn(burner,_amount);
     hbrTotal = hbrTotal.sub(_amount);
-    Burn(_acc,_amount,_info);
+    emit Burn(burner,_amount);
+  }
+
+
+  function withdrowErc20(address _tokenAddr, address _to, uint _value) public onlyOwner {
+    //to audit token address
+    require (token.address != _tokenAddr)
+
+    ERC20 erc20 = ERC20(_tokenAddr);
+    erc20.transfer(_to, _value);
+    emit WithdrowErc20Token(_tokenAddr, _to, _value);
   }
 
 }
