@@ -35,19 +35,17 @@ contract HBRAssetsEth is Authorized, PolicyManager {
   //After withdrawable have to withdrawal until noShowLimit
   uint public noShowLimit;
   
-
-
   //asset state
   State public state;
   //ETH reserves for refunds (fundamental asset)
-  uint public ethTotal;
+  uint256 public ethTotal;
   //HBR issuance corresponding to deposited ETH 
-  uint public hbrTotal;
+  uint256 public hbrTotal;
   //Make ether the underlying asset of all assets.
   bool public equalizeLevel;
 
   event StateChanged();
-  event Deposit(address indexed addr,uint256 eth_amount,uint256 hbr_amount);
+  event Deposit(address indexed addr, uint256 eth_amount, uint256 hbr_amount);
   event Withdrawn(address indexed addr, uint256 weiAmount);
   event Burn(address indexed addr, uint256 amount);
   event WithdrowErc20Token (address indexed erc20, address indexed wallet, uint value);
@@ -59,13 +57,12 @@ contract HBRAssetsEth is Authorized, PolicyManager {
     frozonAssets = new HBRFrozenAssets(_tokenAddr);
     AuthorizedUser[msg.sender] = true;
 
-    //init minuteWating to 4320 minutes (3 days), Synchronization time between different block-chain networks should be considered.
-    minuteWating = 4320;
-    //init noShowLimit to 10080 minutes (7 days)
-    noShowLimit = 10080;
+    //init minuteWating to 1440 minutes (1 days), Synchronization time between different block-chain networks should be considered.
+    minuteWating = 1440;
+    //init noShowLimit to 4320 minutes (3 days)
+    noShowLimit = 4320;
   }
 
-  // 1eth : 2000hbr = ethTotal: hbrTotal; 3:6000 = x : 300 , x = 900/6000
   // ethTotal: hbrTotal = x : hbrRefund;
   function assetRate() public view returns(uint256) {
     if(hbrTotal == 0 || ethTotal == 0){return 0;}
@@ -78,19 +75,17 @@ contract HBRAssetsEth is Authorized, PolicyManager {
       }
   }
 
-  //deposit  
-  function deposit(address _addr,uint256 _hbr_amount) public onlyAuthorized payable returns(bool) {
+  //deposit asset
+  function deposit(address _addr,uint256 _hbr_amount) external onlyAuthorized payable {
     require((state == State.ActiveAll || state == State.OnlyDeposit));
     require(msg.value > 0);
 
     ethTotal = ethTotal.add(msg.value);
     hbrTotal = hbrTotal.add(_hbr_amount);
     accounts[_addr] = accounts[_addr].add(msg.value);
-
-    return true;
   }
 
-  function changeState(State _state) public onlyAuthorized {
+  function changeState(State _state) public onlyPolicyManager {
     state = _state;
     emit StateChanged();
   }
@@ -100,15 +95,16 @@ contract HBRAssetsEth is Authorized, PolicyManager {
     return equalizeLevel;
   }
 
-  //change Withdrawal Policy, limit to under 43200 minutes (30 days)
+  //change Withdrawal Policy, limit to under 43200 minutes (30 days) and noShowLimit must be at least 1 minute
   function changeWithdrawalPolicy(uint _minuteWating, uint _noShowLimit) public onlyPolicyManager {
     require(_minuteWating <= 43200);
-    require(_noShowLimit <= 43200);
+    require(_noShowLimit >= 1);
 
     minuteWating = _minuteWating;
     noShowLimit = _noShowLimit;
   }
 
+  //Increase supply and temporarily reduce asset value.
   function freeze(uint256 _amount) public onlyAuthorized{
     require(hbrTotal >= _amount);
 
@@ -118,7 +114,7 @@ contract HBRAssetsEth is Authorized, PolicyManager {
     }
     hbrTotal = hbrTotal.add(_amount);
   }
-
+  //Reduce virtual supply and restore asset value.
   function melt(uint256 _amount) public onlyAuthorized{
     bool result = frozonAssets.melt(_amount);
     if(result != true){
@@ -127,47 +123,49 @@ contract HBRAssetsEth is Authorized, PolicyManager {
     hbrTotal = hbrTotal.sub(_amount);
   }
 
-//Reservation HBR to ETH, 
+  //check reservation information
+  function reservationAt(address _addr) public view returns(uint256, uint256) {
+    return (reservation[_addr].regDate, reservation[_addr].amount);
+  }
+  //Reservation HBR to ETH, 
   function reservationWithdrawal(uint256 _amount) payable public {
     require((state == State.ActiveAll || state == State.OnlyWithdrawl));
     
     if(!equalizeLevel){
-      if(token.balanceOf(msg.sender) >= _amount){
+      if(token.balanceOf(msg.sender) < _amount){
         revert();
       }
     }
 
     reservation[msg.sender].regDate = now;
     reservation[msg.sender].amount = _amount;
-
-    // if(reservation[msg.sender]){
-    //   reservation[msg.sender].regDate = now;
-    //   reservation[msg.sender].amount = _amount;
-    // }else{
-    //   reservation[msg.sender] = Receipt({ regDate : now, amount: _amount});
-    // }
      
   }
 
   //Check withdrawal possible
-  function checkWithdrawal(uint256 _amount) public view returns(bool) {
-    if(state == State.ActiveAll || state == State.OnlyWithdrawl){
+  function checkWithdrawal(address _addr, uint256 _amount) public view returns(bool) {
+    if(state == State.StopAll || state == State.OnlyDeposit){
       return false;
     }
-    if(token.balanceOf(msg.sender) >= _amount){
+
+    if(token.balanceOf(_addr) < _amount){
       return false;
     }
-    if(reservation[msg.sender].amount >= _amount){
+    if(reservation[_addr].amount < _amount){
       return false;
     }
-    uint startTime = reservation[msg.sender].regDate + (minuteWating * 1 minutes);
+    uint startTime = reservation[_addr].regDate + (minuteWating * 1 minutes);
     uint endTime = startTime + (noShowLimit * 1 minutes);
-     if(startTime <= now || endTime <= now) {
+
+    if(startTime > now) {
+      return false;
+    }
+
+    if(endTime < now) {
       return false;
     }
     return true;
   }
-
 
   //exchange HBR to ETH and burn HBR
   function withdrawal(uint256 _amount) payable public {
@@ -178,22 +176,24 @@ contract HBRAssetsEth is Authorized, PolicyManager {
     uint startTime = reservation[msg.sender].regDate + (minuteWating * 1 minutes);
     uint endTime = startTime + (noShowLimit * 1 minutes);
 
-    if(startTime <= now || endTime <= now) {
-      revert('its not reserved time');
+    if(startTime > now) {
+      revert();
+    }
+    if(endTime < now) {
+      revert();
     }
 
     address wallet = msg.sender;
+
+    //remove reservation amount;
+    reservation[msg.sender].amount = reservation[msg.sender].amount.sub(_amount);
     
     uint256 rate = assetRate();
     uint256 eth = _amount.div(rate);
 
-    bool hasBurn = token.burn(wallet,_amount);
+    token.burn(wallet,_amount);
     emit Burn(wallet, _amount);
 
-    if(hasBurn == false){
-      revert();
-    }
-    
     wallet.transfer(eth);
     ethTotal = ethTotal.sub(eth);
     hbrTotal = hbrTotal.sub(_amount);
@@ -210,7 +210,7 @@ contract HBRAssetsEth is Authorized, PolicyManager {
     emit Burn(burner,_amount);
   }
 
-
+  //Authorized accounts can refund the wrong transfered erc20
   function withdrowErc20(address _tokenAddr, address _to, uint _value) public onlyAuthorized {
     ERC20 erc20 = ERC20(_tokenAddr);
     erc20.transfer(_to, _value);

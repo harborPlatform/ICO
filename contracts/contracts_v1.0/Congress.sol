@@ -9,10 +9,7 @@ pragma solidity ^0.4.24;
  */
 contract Congress {
   address public congress;
-
-
   event CongressTransferred(address indexed previousCongress, address indexed newCongress);
-
 
   /**
    * @dev The Ownable constructor sets the original `congress` of the contract to the sender
@@ -22,7 +19,6 @@ contract Congress {
     congress = msg.sender;
   }
 
-
   /**
    * @dev Throws if called by any account other than the congress.
    */
@@ -30,7 +26,6 @@ contract Congress {
     require(msg.sender == congress);
     _;
   }
-
 
   /**
    * @dev Allows the current congress to transfer control of the contract to a newCongress.

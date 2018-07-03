@@ -7,7 +7,7 @@ import './Authorized.sol';
  * @title IntegrityService
  * @dev The identification contract confirms the identity of the investor for the purpose of kyc / aml.
  *
- * authority level
+ * todo authority level
  * step 1 approve system
  * step 2 approve 3rd party
  * step 3 approve self 
@@ -20,6 +20,7 @@ contract HBRIdentification is Authorized {
 
   event proven(address addr,bool isConfirm);
 
+
   //Identification check for KYC/AML
   function verify(address _addr) public view returns(bool) {
    return IdentificationDb[_addr];
@@ -30,4 +31,12 @@ contract HBRIdentification is Authorized {
     IdentificationDb[_addr] = _isConfirm;
     emit proven(_addr,_isConfirm);
   }
+
+
+  function provenAddresseList(address[] _addrs, bool _isConfirm) public onlyAuthorized{
+    for (uint256 i = 0; i < _addrs.length; i++) {
+      provenAddress(_addrs[i],_isConfirm);
+    }
+  }
 }
+

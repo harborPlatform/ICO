@@ -10,7 +10,6 @@ pragma solidity ^0.4.24;
 
 
 contract Authorized {
-
   mapping (address => bool) public AuthorizedUser;
   event AuthorizedUserChanged(address indexed addr, bool state );
 
